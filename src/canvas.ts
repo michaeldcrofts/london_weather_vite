@@ -2,13 +2,20 @@ import forecast from "./forecast";
 import today from "./today";
 
 export default class CanvasContainer {
-    canvas; context;
+    canvas; context; cachedWidth
     constructor(el: HTMLCanvasElement) {
         this.canvas = el;
         this.canvas.classList.add("day");
         this.context = this.canvas.getContext("2d")!;
-        this.canvas.width = window.innerWidth * window.devicePixelRatio;
-        this.canvas.height = window.innerHeight * window.devicePixelRatio;
+        if (document.documentElement.clientWidth >= 1024) {
+            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
+            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vw
+            this.cachedWidth = document.documentElement.clientWidth;
+        } else {
+            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.9;
+            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
+            this.cachedWidth = document.documentElement.clientWidth;
+        }
         this.draw();
     }
     get() {
@@ -45,29 +52,17 @@ export default class CanvasContainer {
         
     }
     resize() {
-        this.canvas.width = window.innerWidth * window.devicePixelRatio;
-        this.canvas.height = window.innerHeight * window.devicePixelRatio;
-        this.draw();
+        if (this.cachedWidth !== document.documentElement.clientWidth) {
+            console.log("Resizing");
+            if (document.documentElement.clientWidth >= 1024) {
+                this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
+                this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vw
+            } else {
+                this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.9;
+                this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
+            }
+            this.cachedWidth = document.documentElement.clientWidth;
+            this.draw();
+        }
     }
 }
-
-
-// in-source test suites
-/*
-if (import.meta.vitest) {
-    const { it, expect } = import.meta.vitest
-    describe("CanvasContainer", () => {
-        it("CanvasContainer class should be defined", () => {
-            expect(CanvasContainer).toBeDefined();
-        });
-        it("CanvasContainer.get method should be defined", () => {
-            expect(CanvasContainer).toBeDefined();
-        });
-        it("CanvasContainer.get should return HTML Canvas Element", () => {
-            let newCanvas = new HTMLCanvasElement();
-            const testCanvas = new CanvasContainer(newCanvas);
-            const result = testCanvas.get();
-            expect(result).toBeInstanceOf(HTMLCanvasElement);
-        });
-    });
-  } */ 
