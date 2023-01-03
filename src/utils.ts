@@ -40,5 +40,4 @@ export function getData() {
             console.log("Error retrieving URL");
         }
     }
-    window.setTimeout(()=>{ getData(); }, 900000);
 }

@@ -5,7 +5,7 @@ import { isNight } from './utils'
 import { getData } from './utils'
 
 export default class CanvasContainer {
-    canvas; context; cachedWidth
+    canvas; context; cachedWidth;
     constructor(el: HTMLCanvasElement) {
         this.canvas = el;
         let cssClass: string = isNight() ? "night" : "day";
@@ -55,10 +55,6 @@ export default class CanvasContainer {
                 updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
             });
         }
-        window.setTimeout(()=>{
-            this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
-            this.draw();
-        },60000);
     }
     resize() {
         if (this.cachedWidth !== document.documentElement.clientWidth) {
