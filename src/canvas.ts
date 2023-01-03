@@ -1,11 +1,15 @@
 import forecast from "./forecast";
 import today from "./today";
+import updateTime from "./updateTime";
+import { isNight } from './utils'
+import { getData } from './utils'
 
 export default class CanvasContainer {
     canvas; context; cachedWidth
     constructor(el: HTMLCanvasElement) {
         this.canvas = el;
-        this.canvas.classList.add("day");
+        let cssClass: string = isNight() ? "night" : "day";
+        this.canvas.classList.add(cssClass);
         this.context = this.canvas.getContext("2d")!;
         if (document.documentElement.clientWidth >= 1024) {
             this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
@@ -16,6 +20,7 @@ export default class CanvasContainer {
         }
         this.cachedWidth = document.documentElement.clientWidth;
         this.draw();
+        getData();
     }
     get() {
         return this.canvas;
@@ -32,10 +37,11 @@ export default class CanvasContainer {
                 .then((response) => {
                     forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),2,{x: 0, y: response + remaining})
                     .then((response) => {
-                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),2,{x: 0, y: response + remaining});
+                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),3,{x: 0, y: response + remaining});
                     });
                 });
             });
+            updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
         } else {
             let width: number = Math.floor(this.canvas.width/3)
             today(this.context,width,this.canvas.height,{x: 0, y: 10})
@@ -46,9 +52,13 @@ export default class CanvasContainer {
                 forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,2,{x: width+3*vw, y: 0});
                 width += Math.floor(this.canvas.width/5)
                 forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,3,{x: width+5*vw, y: 0});
+                updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
             });
         }
-        
+        window.setTimeout(()=>{
+            this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
+            this.draw();
+        },60000);
     }
     resize() {
         if (this.cachedWidth !== document.documentElement.clientWidth) {

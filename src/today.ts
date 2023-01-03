@@ -1,3 +1,4 @@
+import { iconMap, isNight } from './utils'
 export default async function today(context: CanvasRenderingContext2D, 
                                     width: number, height: number, coords = {x: 0, y: 0}) {
     let centre: number = coords.x + width / 2;
@@ -30,13 +31,20 @@ export default async function today(context: CanvasRenderingContext2D,
     fontSize = unit * 0.1;
     context.font = fontSize + "px Arial";
     y += fontSize + 5;
-    context.fillText("11°C", centre, y);
+    let currentTemp: string = window.localStorage.getItem("temperature") || "-";
+    let regex = /[^\d\.\-]+/g;
+    let result: number = Number(currentTemp.replace(regex, ""));
+    context.fillText(result.toString() + "°C", centre, y);
     fontSize = unit * 0.07;
     context.font = fontSize + "px Arial";
     y += fontSize + 5;
-    context.fillText("Clear", centre, y);
+    let currentCondition: string;
+    window.localStorage.getItem("description") == "undefined" ? currentCondition = "-" : currentCondition = window.localStorage.getItem("description")!;
+    context.fillText(currentCondition, centre, y);
     y += fontSize + 5;
-    context.fillText("Wind: 17km/h", centre, y);
+    let wind: string;
+    window.localStorage.getItem("wind") == "undefined" ? wind = "-" : wind = window.localStorage.getItem("wind")!;
+    context.fillText("Wind: " + wind, centre, y);
     y += fontSize / 2;
     context.moveTo(coords.x,y);
     context.strokeStyle = "white";
@@ -47,7 +55,22 @@ export default async function today(context: CanvasRenderingContext2D,
     let imgWidth: number = unit * 0.25;
     let img = new Image();
     let spriteX: number = 0;
-    let spriteY: number = 0;
+    let spriteY: number = isNight() ? 290 : 0;
+    // Find correct image
+    currentCondition = currentCondition.toLowerCase();
+    if (currentCondition.includes("clear")) {
+        spriteX = iconMap.clear.x;
+    } else if (currentCondition.includes("heavy") && currentCondition.includes("rain")) {
+        spriteX = iconMap.heavyRain.x;
+    } else if (currentCondition.includes("rain") && (currentCondition.includes("moderate") || currentCondition.includes("light"))) {
+        spriteX = iconMap.lightRain.x;
+    } else if (currentCondition.includes("cloud")) {
+        spriteX = iconMap.partlyCloudy.x;
+    } else if (currentCondition.includes("storm")) {
+        spriteX = iconMap.storm.x;
+    } else if (currentCondition.includes("rain")) {
+        spriteX = iconMap.rain.x;
+    } 
     img.onload = ()=>{
         Promise.all([
             createImageBitmap(img, spriteX, spriteY, 120, 120)
