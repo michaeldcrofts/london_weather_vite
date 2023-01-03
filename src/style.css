@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-content: center;
+}
+canvas { /* Mobile full screen */
+  width: 100vw;
+  height: 100vh;
+}
+.day {
+background: linear-gradient(to bottom left, white 1%,#4388D3 70%,#2668C8 100%); 
+}
+.night {
+background: linear-gradient(to bottom left, #2668C8 1%,#285679 100%); 
+}
