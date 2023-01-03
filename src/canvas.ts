@@ -10,19 +10,18 @@ export default class CanvasContainer {
         if (document.documentElement.clientWidth >= 1024) {
             this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
             this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vw
-            this.cachedWidth = document.documentElement.clientWidth;
         } else {
             this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.9;
             this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
-            this.cachedWidth = document.documentElement.clientWidth;
         }
+        this.cachedWidth = document.documentElement.clientWidth;
         this.draw();
     }
     get() {
         return this.canvas;
     }
     draw() {
-        let orientation: string = window.orientation == 90 || window.orientation == -90 ? "landscape" : "portrait";
+        let orientation: string = window.orientation == 90 || window.orientation == -90 || this.cachedWidth >= 1024 ? "landscape" : "portrait";
         if (orientation === "portrait") {
             let height: number = Math.floor(this.canvas.height/4);
             today(this.context,this.canvas.width,height,{x: 0, y: 10})
@@ -53,7 +52,6 @@ export default class CanvasContainer {
     }
     resize() {
         if (this.cachedWidth !== document.documentElement.clientWidth) {
-            console.log("Resizing");
             if (document.documentElement.clientWidth >= 1024) {
                 this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
                 this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vw
