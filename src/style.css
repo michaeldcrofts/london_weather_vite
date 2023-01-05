@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: rgba(68,114,196, 0.85);
 }
 canvas { /* Mobile full screen */
   width: 90vw;
