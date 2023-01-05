@@ -7,7 +7,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 `
 window.onload = () => {
   getData();
-  //window.setTimeout(()=>{ getData(); }, 900000);
   var screenCanvas = new CanvasContainer(document.querySelector<HTMLCanvasElement>('#view')!);
   window.addEventListener('resize', ()=>{screenCanvas.resize();}, true)
   screenCanvas.get().addEventListener('click', toggleUnit, false);
