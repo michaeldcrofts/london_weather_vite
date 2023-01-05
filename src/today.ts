@@ -1,4 +1,4 @@
-import { iconMap, isNight, scaleFont, localStore, timeOutIds, selfUpdatingWidget, selfUpdatingText } from './utils'
+import { iconMap, isNight, scaleFont, localStore, timeOutIds, selfUpdatingWidget, selfUpdatingText, getData } from './utils'
 export default async function today(context: CanvasRenderingContext2D, 
                                     width: number, height: number, coords = {x: 0, y: 0}) {
     let centre: number = coords.x + width / 2;
@@ -109,7 +109,8 @@ export default async function today(context: CanvasRenderingContext2D,
         localStore.set("time",today,time.updater);
         let tick = window.setInterval(()=>{
             let today = new Date().toLocaleString('en-gb', { weekday: 'long', day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'}).replaceAll(",","");
-            localStore.update("time",today);            
+            localStore.update("time",today);   
+            getData();      // getData called every minute, the function will ignore the request if the timestamp isn't 15 minutes old.         
         },60000);
         timeOutIds.push(tick);
         // Location

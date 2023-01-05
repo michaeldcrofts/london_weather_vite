@@ -14,14 +14,14 @@ export function isNight(): boolean {
 export function getData() {
     const API_URL: string = "https://goweather.herokuapp.com/weather/london";   //"https://jsonplaceholder.typicode.com/todos/1"; // 
     let timestamp: number = Number(localStorage.getItem("timestamp"));
-    localStorage.removeItem("timestamp");
+    //localStorage.removeItem("timestamp");
     if (Math.floor((Date.now() - timestamp) / 1000) >= 899 ) {
         console.log("Data older than 15 minutes");
         try {
             fetch(API_URL).then(
                 response => response.json()).then(data => {
                     console.log("Fetched:", data);
-                    data = JSON.parse('{"temperature":"0 °C","wind":"11 km/h","description":"Clear","forecast":[{"day":"1","temperature":"-2 °C","wind":"24 km/h"},{"day":"2","temperature":"10 °C","wind":"41 km/h"},{"day":"3","temperature":"+11 °C","wind":"28 km/h"}]}');
+                    //data = JSON.parse('{"temperature":"0 °C","wind":"11 km/h","description":"Clear","forecast":[{"day":"1","temperature":"-2 °C","wind":"24 km/h"},{"day":"2","temperature":"10 °C","wind":"41 km/h"},{"day":"3","temperature":"+11 °C","wind":"28 km/h"}]}');
                     localStorage.setItem("timestamp", Date.now().toString());
                     let currentTemp: string = data.temperature;
                     const regex = /[^\d\.\-]+/g;
