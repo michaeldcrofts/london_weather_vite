@@ -39,7 +39,7 @@ export default class CanvasContainer {
                     });
                 });
             });
-            updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
+            updateTime(this.context,Math.floor(this.canvas.width/2),this.canvas.height,{x: Math.floor(this.canvas.width/2)-Math.floor(this.canvas.width/4), y: this.canvas.height * 0.95});
         } else {
             let width: number = Math.floor(this.canvas.width/3)
             today(this.context,width,this.canvas.height,{x: 0, y: 10})
@@ -50,7 +50,7 @@ export default class CanvasContainer {
                 forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,2,{x: width+3*vw, y: 0});
                 width += Math.floor(this.canvas.width/5)
                 forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,3,{x: width+5*vw, y: 0});
-                updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
+                updateTime(this.context,Math.floor(this.canvas.width/5),this.canvas.height,{x: Math.floor(this.canvas.width/10), y: this.canvas.height * 0.94});
             });
         }
     }
