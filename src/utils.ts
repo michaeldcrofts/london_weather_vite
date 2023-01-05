@@ -59,7 +59,7 @@ export function getData() {
                     localStore.update("windDay2", data.forecast[1].wind);
                     localStore.update("windDay3", data.forecast[2].wind);
                 },
-                function(error) {
+                function() {
                     console.log("Promise returned error, retrying...");
                     window.setTimeout(getData, 500);
                 }

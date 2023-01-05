@@ -31,8 +31,6 @@ export default class CanvasContainer {
             let height: number = Math.floor(this.canvas.height/4);
             today(this.context,this.canvas.width,height,{x: 0, y: 10})
             .then((response) => {
-                let vh: number = this.canvas.height * 0.01;
-                let remaining = (100 * vh - 60 * vh - response) / 8;
                 forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),1,{x: 0, y: response})
                 .then((response) => {
                     forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),2,{x: 0, y: response + this.canvas.height/12})
