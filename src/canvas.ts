@@ -1,8 +1,8 @@
 import forecast from "./forecast";
 import today from "./today";
 import updateTime from "./updateTime";
-import { isNight } from './utils'
-import { getData } from './utils'
+import { cancelTimeOuts, isNight } from './utils'
+import { getData, localStore } from './utils'
 
 export default class CanvasContainer {
     canvas; context; cachedWidth;
@@ -33,11 +33,11 @@ export default class CanvasContainer {
             .then((response) => {
                 let vh: number = this.canvas.height * 0.01;
                 let remaining = (100 * vh - 60 * vh - response) / 8;
-                forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),1,{x: 0, y: response + remaining})
+                forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),1,{x: 0, y: response})
                 .then((response) => {
-                    forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),2,{x: 0, y: response + remaining})
+                    forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),2,{x: 0, y: response + this.canvas.height/12})
                     .then((response) => {
-                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),3,{x: 0, y: response + remaining});
+                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),3,{x: 0, y: response + this.canvas.height/12});
                     });
                 });
             });
@@ -66,6 +66,8 @@ export default class CanvasContainer {
                 this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
             }
             this.cachedWidth = document.documentElement.clientWidth;
+            cancelTimeOuts();   // Remove any timer callbacks
+            localStore.cancelCallbacks();      // Delete all the callbacks for the data bound objects
             this.draw();
         }
     }
