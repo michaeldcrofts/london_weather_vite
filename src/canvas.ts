@@ -1,22 +1,27 @@
 import forecast from "./forecast";
 import today from "./today";
 import updateTime from "./updateTime";
-import { isNight } from './utils'
-import { getData } from './utils'
+import { cancelTimeOuts, isNight } from './utils'
+import { getData, localStore } from './utils'
 
 export default class CanvasContainer {
-    canvas; context; cachedWidth
-    constructor(el: HTMLCanvasElement) {
+    /* class CanvasContainer - contains and manages a canvas. It's responsible for managing the drawing and resizing 
+       of the canvas on screen.
+    */
+    canvas; context; cachedWidth;
+    constructor(el: HTMLCanvasElement) {    
+        // Sets the canvas up with some hard-coded percentages of the screen width and height.
+        // Note: If these are changed here they must also be changed inside style.css to match!
         this.canvas = el;
         let cssClass: string = isNight() ? "night" : "day";
         this.canvas.classList.add(cssClass);
         this.context = this.canvas.getContext("2d")!;
         if (document.documentElement.clientWidth >= 1024) {
             this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
-            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vw
+            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vh
         } else {
-            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.9;
-            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
+            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.9;   // 90vw
+            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9; // 90vh
         }
         this.cachedWidth = document.documentElement.clientWidth;
         this.draw();
@@ -31,18 +36,16 @@ export default class CanvasContainer {
             let height: number = Math.floor(this.canvas.height/4);
             today(this.context,this.canvas.width,height,{x: 0, y: 10})
             .then((response) => {
-                let vh: number = this.canvas.height * 0.01;
-                let remaining = (100 * vh - 60 * vh - response) / 8;
-                forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),1,{x: 0, y: response + remaining})
+                forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),1,{x: 0, y: response})
                 .then((response) => {
-                    forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),2,{x: 0, y: response + remaining})
+                    forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),2,{x: 0, y: response + this.canvas.height/12})
                     .then((response) => {
-                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/5),3,{x: 0, y: response + remaining});
+                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),3,{x: 0, y: response + this.canvas.height/12});
                     });
                 });
             });
-            updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
-        } else {
+            updateTime(this.context,Math.floor(this.canvas.width/2),this.canvas.height,{x: Math.floor(this.canvas.width/2)-Math.floor(this.canvas.width/4), y: this.canvas.height * 0.95});
+        } else {        // Landscape
             let width: number = Math.floor(this.canvas.width/3)
             today(this.context,width,this.canvas.height,{x: 0, y: 10})
             .then(() => {
@@ -52,13 +55,9 @@ export default class CanvasContainer {
                 forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,2,{x: width+3*vw, y: 0});
                 width += Math.floor(this.canvas.width/5)
                 forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,3,{x: width+5*vw, y: 0});
-                updateTime(this.context,this.canvas.width,this.canvas.height,{x: 0, y: 0});
+                updateTime(this.context,Math.floor(this.canvas.width/5),this.canvas.height,{x: Math.floor(this.canvas.width/10), y: this.canvas.height * 0.94});
             });
         }
-        window.setTimeout(()=>{
-            this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
-            this.draw();
-        },60000);
     }
     resize() {
         if (this.cachedWidth !== document.documentElement.clientWidth) {
@@ -70,6 +69,8 @@ export default class CanvasContainer {
                 this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
             }
             this.cachedWidth = document.documentElement.clientWidth;
+            cancelTimeOuts();   // Remove any timer callbacks
+            localStore.cancelCallbacks();      // Delete all the callbacks for the data bound objects
             this.draw();
         }
     }
