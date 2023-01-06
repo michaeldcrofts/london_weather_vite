@@ -49,7 +49,7 @@ export default async function today(context: CanvasRenderingContext2D,
         context.fillText("London",x,y+fontSize+(h-fontSize)/2);
         // Temperature
         y += h + marginY;
-        w = width * 0.2;
+        w = width * 0.4;
         h = height / 10;
         x = centre - w/2;
         let temp = new selfUpdatingWidget(x,y,w,h);
@@ -70,13 +70,15 @@ export default async function today(context: CanvasRenderingContext2D,
         localStore.set("temp",current,temp.updater);
         y += h + marginY;
         // Current condition
-        w = width * 0.5;
+        w = width * 0.7;
         h = height * 0.11;
         x = centre - w/2;
         selfUpdatingText(context, "description",x,y,w,h);        
-        y += h + marginY * 20;
+        y += h + marginY;
         // Wind
+        w = width * 0.5;
         h = height * 0.08;
+        x = centre - w/2;
         selfUpdatingText(context, "wind",x,y,w,h);
         y += h;
     }
@@ -105,8 +107,8 @@ export default async function today(context: CanvasRenderingContext2D,
         context.fillText("London",x,y+fontSize+(h-fontSize)/2);
         y += h + marginY;
         // Temperature
-        w = width * 0.15;
-        h = height / 6;
+        w = width * 0.25;
+        h = height * 0.25;
         x = centre - w/2;
         let temp = new selfUpdatingWidget(x,y,w,h);
         temp.updater = ()=>{
@@ -130,13 +132,13 @@ export default async function today(context: CanvasRenderingContext2D,
         h = height * 0.17;
         x = centre - w/2;
         selfUpdatingText(context, "description",x,y,w,h);
-        y += h + marginY*3;
+        y += h + marginY;
         // Wind
         w = width * 0.35;
         h = height * 0.15;
         x = centre - w/2;
         selfUpdatingText(context, "wind",x,y,w,h);
-        y += h + marginY*5;
+        y += h + marginY;
     }
     // Applied to both portrait and landscape views
     y += height * 0.03;
@@ -149,8 +151,8 @@ export default async function today(context: CanvasRenderingContext2D,
     y += context.lineWidth * 3;
     // Image icon, uses the selfUpdatingWidget class to manage updates. Binds to the 'description' data store
     let imgWidth: number = unit * 0.25;
-    if ( width > height && imgWidth > width * 0.2) {
-        imgWidth = width *0.2;
+    if ( height < width && imgWidth > height * 0.8 ) {
+        imgWidth = height * 0.8;
     }
     let x: number;
     let w: number = imgWidth;

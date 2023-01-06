@@ -31,8 +31,7 @@ export default class CanvasContainer {
         return this.canvas;
     }
     draw() {
-        let orientation: string = window.orientation == 90 || window.orientation == -90 || this.cachedWidth >= 1024 ? "landscape" : "portrait";
-        if (orientation === "portrait") {
+        if (this.canvas.width < this.canvas.height) {   // Portrait
             let height: number = Math.floor(this.canvas.height/4);
             today(this.context,this.canvas.width,height,{x: 0, y: 10})
             .then((response) => {
