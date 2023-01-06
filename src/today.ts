@@ -147,11 +147,14 @@ export default async function today(context: CanvasRenderingContext2D,
     context.lineTo(width, y);
     context.stroke();
     y += context.lineWidth * 3;
+    // Image icon, uses the selfUpdatingWidget class to manage updates. Binds to the 'description' data store
     let imgWidth: number = unit * 0.25;
+    if ( width > height && imgWidth > width * 0.2) {
+        imgWidth = width *0.2;
+    }
     let x: number;
     let w: number = imgWidth;
     let h: number = w;
-    // Image icon, uses the selfUpdatingWidget class to manage updates. Binds to the 'description' data store
     let imgY = y;
     if (width < height) {
         x = centre-w/2;
