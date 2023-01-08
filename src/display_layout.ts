@@ -1,5 +1,6 @@
 import CanvasContainer from "./canvas";
-import { Textbox, selfUpdatingWidget, isNight, iconMap } from "./utils";
+import { isNight, iconMap } from "./utils";
+import { selfUpdatingWidget, Textbox } from "./databound_widgets"
 import { localStore } from "./data";
 /* A Map for the layout of portrait and landscape views to be read by the CanvasContainer. Each canvas element has a render.... function to draw itself
    which are then in turn called by the CanvasContainer. Each render...functions takes as arguments the x, y, width, and height measured in
@@ -9,10 +10,11 @@ export var portrait = new Map([
     // Today
     [renderDayDateTime,     {x: 0, y: 0,   w: 100, h: 5}],
     [renderLocation,        {x: 0, y: 5.5, w: 100, h: 6}],
-    [renderDescriptionImg,  {x: 0, y: 6.5, w: 28,  h: 28}],
-    [renderTodayTemp,       {x: 0, y: 12,  w: 100, h: 8}],
+    [renderDescriptionImg,  {x: 5, y: 6.5, w: 28,  h: 28}],
+    [renderTodayTemp,       {x: 34, y: 12,  w: 32, h: 8}],
     [renderTodayDescription,{x: 0, y: 20.5,w: 100, h: 6}],
-    [renderTodayWind,       {x: 0, y: 27,  w: 100, h: 5}],
+    [renderTodayWindImg,    {x: 30, y: 27,  w: 15,  h: 4.5}],
+    [renderTodayWind,       {x: 47, y: 27,  w: 23, h: 5}],
     [renderWhiteLine,       {x: 0, y: 33,  w: 100, h: 0.5}],
     // Day 1
     [renderDay1BgRect,      {x: 1, y: 34.5,w: 98,  h: 15.5}],
@@ -129,6 +131,7 @@ export function renderTodayTemp(options: {canvasContainer: CanvasContainer, x: n
     let todayTempTxt = new Textbox({context: context, text: todayTemp!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, dataBindSrc:"temp"});
     options.canvasContainer.add("todayTempTxt", todayTempTxt);
     todayTempTxt.draw();
+
 }
 
 export function renderTodayDescription(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
@@ -173,7 +176,24 @@ export function renderDescriptionImg(options: {canvasContainer: CanvasContainer,
         if ( todayDescriptionTxt instanceof Textbox ) {
             let descriptionX = todayDescriptionTxt.x + (todayDescriptionTxt.w - todayDescriptionTxt.txtWidth) / 2;
             if ( options.x * vw + options.w * vw > descriptionX ) { // Ensure no overlap
-                options.w = descriptionX / vw;
+                options.w = descriptionX / vw - options.x;
+            }
+        }
+        // Find edge of temperature text
+        let todayTempTxt = options.canvasContainer.objects.get("todayTempTxt");
+        if ( todayTempTxt instanceof Textbox ) {
+            let tempX = todayTempTxt.x + (todayTempTxt.w - todayTempTxt.txtWidth) / 2;
+            if ( options.x * vw + options.w * vw > tempX ) { // Ensure no overlap
+                options.w = tempX / vw - options.x;
+            }
+        }
+        // Find edge of Location text
+        let locationTxt = options.canvasContainer.objects.get("locationTxt");
+        if ( locationTxt instanceof Textbox ) {
+            let locationX = locationTxt.x + (locationTxt.w - locationTxt.txtWidth) / 2;
+            console.log(locationX, options.x * vw + options.w * vw );
+            if ( options.x * vw + options.w * vw > locationX ) { // Ensure no overlap
+                options.w = locationX / vw - options.x;
             }
         }
     } 
@@ -212,6 +232,7 @@ export function renderDescriptionImg(options: {canvasContainer: CanvasContainer,
         img.src = "/icons.png";     
     };
     localStore.set("description",todayDescription!,imageIcon.updater);
+    
     options.canvasContainer.add("DescriptionImg", imageIcon);
 } 
 
@@ -315,6 +336,20 @@ export function renderDay3Temp(options: {canvasContainer: CanvasContainer, x: nu
                                      dataBindSrc:"tempDay3", bgColor: "rgba(68,114,196, 1)", align: align});
     options.canvasContainer.add("tempDay3", day3TempTxt);
     day3TempTxt.draw();
+}
+
+export function renderTodayWindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+    let context = options.canvasContainer.context;
+    let vw = options.canvasContainer.vw;
+    let vh = options.canvasContainer.vh;
+    let img = new Image();
+    img.onload = ()=>{
+        let scale = (options.w * vw) / img.width
+        let widthImg = options.w * vw;
+        let heightImg = img.height * scale;
+        context.drawImage(img, options.x * vw, options.y * vh, widthImg, heightImg);
+    }
+    img.src = "/wind.png";
 }
 
 export function renderDay1WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
@@ -430,7 +465,8 @@ export function renderDay1Date(options: {canvasContainer: CanvasContainer, x: nu
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
     let day1Date = localStore.get("day1_date") == null ? "-" : localStore.get("day1_date");
-    let day1DateTxt = new Textbox({context: context, text: day1Date!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, dataBindSrc:"day1_date"});
+    let day1DateTxt = new Textbox({context: context, text: day1Date!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, 
+                                   dataBindSrc:"day1_date", bgColor: "rgba(68,114,196, 1)", align: "center"});
     options.canvasContainer.add("day1DateTxt", day1DateTxt);
     day1DateTxt.draw();
 }
@@ -440,7 +476,8 @@ export function renderDay2Date(options: {canvasContainer: CanvasContainer, x: nu
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
     let day2Date = localStore.get("day2_date") == null ? "-" : localStore.get("day2_date");
-    let day2DateTxt = new Textbox({context: context, text: day2Date!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, dataBindSrc:"day2_date"});
+    let day2DateTxt = new Textbox({context: context, text: day2Date!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, 
+                                   dataBindSrc:"day2_date", bgColor: "rgba(68,114,196, 1)", align: "center"});
     options.canvasContainer.add("day2DateTxt", day2DateTxt);
     day2DateTxt.draw();
 }
@@ -450,7 +487,8 @@ export function renderDay3Date(options: {canvasContainer: CanvasContainer, x: nu
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
     let day3Date = localStore.get("day3_date") == null ? "-" : localStore.get("day3_date");
-    let day3DateTxt = new Textbox({context: context, text: day3Date!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, dataBindSrc:"day3_date"});
+    let day3DateTxt = new Textbox({context: context, text: day3Date!, x: options.x * vw, y: options.y * vh, w: options.w * vw, h:options.h * vh, 
+                                   dataBindSrc:"day3_date", bgColor: "rgba(68,114,196, 1)", align: "center"});
     options.canvasContainer.add("day3DateTxt", day3DateTxt);
     day3DateTxt.draw();
 }

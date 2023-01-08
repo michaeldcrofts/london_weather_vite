@@ -12,7 +12,6 @@ window.onload = () => {
   var screenCanvas = new CanvasContainer(document.querySelector<HTMLCanvasElement>('#view')!);
   window.addEventListener('resize', ()=>{screenCanvas.resize();}, true)
   screenCanvas.get().addEventListener('click', toggleUnit, false);
-  localStorage.setItem("unit", "°C");
   window.setInterval(()=>{  // Update the time every minute
     getData()            
   },60000);

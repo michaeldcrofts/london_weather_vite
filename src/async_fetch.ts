@@ -6,7 +6,7 @@
 */
 
 import { localStore } from "./data";
-import { toF } from "./utils";
+import { toF, isNight } from "./utils";
 
 /* Manages the update to localStorage for the time strings used by the app*/
 export function updateTimeStrings() {
@@ -45,6 +45,10 @@ export function updateTimeStrings() {
     localStore.get("day3_short_day") == null ? localStore.set("day3_short_day", day3_short_day) : localStore.update("day3_short_day", day3_short_day);
     localStore.get("day3_date") == null ? localStore.set("day3_date", day3_date) : localStore.update("day3_date", day3_date);
     localStore.get("day3_day_date") == null ? localStore.set("day3_day_date", day3_day_date) : localStore.update("day3_day_date", day3_day_date);
+
+    // Update css class of the canvas
+    let cssClass: string = isNight() ? "night" : "day";
+    localStore.update("cssClass", cssClass);
 }
 
 /*
@@ -65,8 +69,17 @@ export function getData() {             // Checks the timestamp stored in localS
                 localStore.get("lastUpdateTime") == null ? localStore.set("lastUpdateTime", lastUpdateTime) : localStore.update("lastUpdateTime", lastUpdateTime);                
                 let unit = localStore.get("unit");
                 if ( unit == null ) {
-                    localStore.set("unit", "°C");
-                    unit = "°C";
+                    let currentTemp = localStore.get("temp");
+                    if ( currentTemp != null ) {
+                        if ( currentTemp.includes("°C") ) {
+                            unit = "°C";
+                        } else {
+                            unit = "°F";
+                        }
+                    } else {
+                        unit = "°C";
+                    }
+                    localStore.set("unit", unit);
                 } 
 
                 // Process temperatures in desired unit
@@ -92,10 +105,10 @@ export function getData() {             // Checks the timestamp stored in localS
                     day3Temp = toF(Number(day3Temp)).toString();
                 }
                 // If not already present in localStorage then set them, otherwise update them
-                localStore.get("temp") == null ? localStore.set("temp", currentTemp) : localStore.update("temp", currentTemp);
-                localStore.get("tempDay1") == null ? localStore.set("tempDay1", day1Temp) : localStore.update("tempDay1", day1Temp);
-                localStore.get("tempDay2") == null ? localStore.set("tempDay2", day2Temp) : localStore.update("tempDay2", day2Temp);
-                localStore.get("tempDay3") == null ? localStore.set("tempDay3", day3Temp) : localStore.update("tempDay3", day3Temp);
+                localStore.get("temp") == null ? localStore.set("temp", currentTemp + unit) : localStore.update("temp", currentTemp + unit);
+                localStore.get("tempDay1") == null ? localStore.set("tempDay1", day1Temp + unit) : localStore.update("tempDay1", day1Temp + unit);
+                localStore.get("tempDay2") == null ? localStore.set("tempDay2", day2Temp + unit) : localStore.update("tempDay2", day2Temp + unit);
+                localStore.get("tempDay3") == null ? localStore.set("tempDay3", day3Temp + unit) : localStore.update("tempDay3", day3Temp + unit);
                 localStore.get("description") == null ? localStore.set("description", data.description) : localStore.update("description", data.description);
                 localStore.get("wind") == null ? localStore.set("wind", data.wind) : localStore.update("wind", data.wind);
                 localStore.get("windDay1") == null ? localStore.set("windDay1", data.forecast[0].wind) : localStore.update("windDay1", data.forecast[0].wind);

@@ -1,4 +1,5 @@
-import { cancelTimeOuts, isNight, selfUpdatingWidget, Textbox } from './utils';
+import { cancelTimeOuts, isNight } from './utils';
+import { selfUpdatingWidget, Textbox } from "./databound_widgets"
 import { localStore } from "./data";
 import { getData } from "./async_fetch";
 import { portrait, landscape } from "./display_layout";
@@ -13,6 +14,9 @@ export default class CanvasContainer {
         // Note: If these are changed here they must also be changed inside style.css to match!
         this.canvas = el;
         let cssClass: string = isNight() ? "night" : "day";
+        localStore.set("cssClass", cssClass, ()=>{
+            this.canvas.classList.add(cssClass);    
+        });
         this.canvas.classList.add(cssClass);
         this.context = this.canvas.getContext("2d")!;
         if (document.documentElement.clientWidth >= 1024) {
