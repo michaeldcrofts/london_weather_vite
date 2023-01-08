@@ -1,14 +1,13 @@
-import forecast from "./forecast";
-import today from "./today";
-import updateTime from "./updateTime";
-import { cancelTimeOuts, isNight } from './utils'
-import { getData, localStore } from './utils'
+import { cancelTimeOuts, isNight, selfUpdatingWidget, Textbox } from './utils';
+import { localStore } from "./data";
+import { getData } from "./async_fetch";
+import { portrait, landscape } from "./display_layout";
 
 export default class CanvasContainer {
     /* class CanvasContainer - contains and manages a canvas. It's responsible for managing the drawing and resizing 
        of the canvas on screen.
     */
-    canvas; context; cachedWidth;
+    canvas; context; cachedWidth; vw; vh; objects;
     constructor(el: HTMLCanvasElement) {    
         // Sets the canvas up with some hard-coded percentages of the screen width and height.
         // Note: If these are changed here they must also be changed inside style.css to match!
@@ -24,38 +23,34 @@ export default class CanvasContainer {
             this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9; // 90vh
         }
         this.cachedWidth = document.documentElement.clientWidth;
+        this.vw = this.canvas.width * 0.01;
+        this.vh = this.canvas.height * 0.01;
+        this.objects = new Map<string, Textbox | selfUpdatingWidget>();
         this.draw();
         getData();
     }
     get() {
         return this.canvas;
     }
+    add(key: string, obj: Textbox | selfUpdatingWidget) {
+        this.objects.set(key, obj);
+    }
     draw() {
         if (this.canvas.width < this.canvas.height) {   // Portrait
-            let height: number = Math.floor(this.canvas.height/4);
-            today(this.context,this.canvas.width,height,{x: 0, y: 10})
-            .then((response) => {
-                forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),1,{x: 0, y: response})
-                .then((response) => {
-                    forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),2,{x: 0, y: response + this.canvas.height/12})
-                    .then((response) => {
-                        forecast(this.context,this.canvas.width,Math.floor(this.canvas.height/7),3,{x: 0, y: response + this.canvas.height/12});
-                    });
-                });
-            });
-            updateTime(this.context,Math.floor(this.canvas.width/2),this.canvas.height,{x: Math.floor(this.canvas.width/2)-Math.floor(this.canvas.width/4), y: this.canvas.height * 0.95});
+            for ( let key of portrait.keys() ) {
+                let options = portrait.get(key);
+                let optionsMod = { x: options!.x, y: options!.y, w: options!.w, h: options!.h, canvasContainer: this}
+                key(optionsMod);
+                /* OptionsMod is a little odd, but the following worked in dev but would not compile:
+                   key(Object.assign(options,{canvasContainer:this}));
+                */
+            }
         } else {        // Landscape
-            let width: number = Math.floor(this.canvas.width/3)
-            today(this.context,width,this.canvas.height,{x: 0, y: 10})
-            .then(() => {
-                let vw: number = this.canvas.width * 0.01;
-                forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,1,{x: width+1*vw, y: 0});
-                width += Math.floor(this.canvas.width/5)
-                forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,2,{x: width+3*vw, y: 0});
-                width += Math.floor(this.canvas.width/5)
-                forecast(this.context,Math.floor(this.canvas.width/5),this.canvas.height,3,{x: width+5*vw, y: 0});
-                updateTime(this.context,Math.floor(this.canvas.width/5),this.canvas.height,{x: Math.floor(this.canvas.width/10), y: this.canvas.height * 0.94});
-            });
+            for ( let key of landscape.keys() ) {
+                let options = landscape.get(key)!;
+                let optionsMod = { x: options!.x, y: options!.y, w: options!.w, h: options!.h, canvasContainer: this}
+                key(optionsMod);
+            }
         }
     }
     resize() {
@@ -68,8 +63,11 @@ export default class CanvasContainer {
                 this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9;
             }
             this.cachedWidth = document.documentElement.clientWidth;
+            this.vw = this.canvas.width * 0.01;
+            this.vh = this.canvas.height * 0.01;
             cancelTimeOuts();   // Remove any timer callbacks
             localStore.cancelCallbacks();      // Delete all the callbacks for the data bound objects
+            this.objects = new Map<string, Textbox | selfUpdatingWidget>();   // Delete canvas objects
             this.draw();
         }
     }

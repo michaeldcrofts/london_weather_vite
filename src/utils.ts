@@ -1,3 +1,5 @@
+import { localStore } from "./data";
+
 export var iconMap = {          // x & y coordinates for a 'sprite-sheet' of icons
     clear: { x: 0, y: 0 },
     partlyCloudy: { x: 145, y: 0 },
@@ -11,67 +13,6 @@ export function isNight(): boolean {    // A very crude function, returns true b
     let hour: number = new Date().getHours();
     return hour >= 18 ? true : false;
 }
-export function getData() {             // Checks the timestamp stored in localStorage, if old it requests new data from the API and updates localStorage
-    /*
-    If the response from the API is in error a timeout is set to call itself again 1 second later. It will store the temperature data in the unit
-    currently in view (F or C).
-    */
-    const API_URL: string = "https://goweather.herokuapp.com/weather/london";
-    let timestamp: number = Number(localStore.get("timestamp"));
-    //localStorage.removeItem("timestamp");
-    if (Math.floor((Date.now() - timestamp) / 1000) >= 899 ) {      // Data is older than 15 minutes
-        try {
-            fetch(API_URL).then(
-                response => response.json()).then(data => {     // Promise returned good
-                    //data = JSON.parse('{"temperature":"0 °C","wind":"11 km/h","description":"Clear","forecast":[{"day":"1","temperature":"-2 °C","wind":"24 km/h"},{"day":"2","temperature":"10 °C","wind":"41 km/h"},{"day":"3","temperature":"+11 °C","wind":"28 km/h"}]}');
-                    localStore.update("timestamp", Date.now().toString());
-                    let currentTemp: string = data.temperature;
-                    const regex = /[^\d\.\-]+/g;
-                    let result: string = currentTemp.replace(regex, "");
-                    if (localStorage.getItem("unit") == "°F"){
-                        result = toF(Number(result)).toString();
-                    }
-                    localStore.update("temp", result);
-
-                    currentTemp = data.forecast[0].temperature;
-                    result = currentTemp.replace(regex, "");
-                    if (localStorage.getItem("unit") == "°F"){
-                        result = toF(Number(result)).toString();
-                    }
-                    localStore.update("tempDay1", result);
-
-                    currentTemp = data.forecast[1].temperature;
-                    result = currentTemp.replace(regex, "");
-                    if (localStorage.getItem("unit") == "°F"){
-                        result = toF(Number(result)).toString();
-                    }
-                    localStore.update("tempDay2", result);
-
-                    currentTemp = data.forecast[2].temperature;
-                    result = currentTemp.replace(regex, "");
-                    if (localStorage.getItem("unit") == "°F"){
-                        result = toF(Number(result)).toString();
-                    }
-                    localStore.update("tempDay3", result);
-
-                    localStore.update("description", data.description);
-                    localStore.update("wind", "Wind:" + data.wind);
-
-                    localStore.update("windDay1", data.forecast[0].wind);
-                    localStore.update("windDay2", data.forecast[1].wind);
-                    localStore.update("windDay3", data.forecast[2].wind);
-                },
-                function() {
-                    console.log("Promise returned error, retrying...");
-                   // window.setTimeout(getData, 1000);
-                }
-            );
-        } catch {
-            console.log("Error retrieving URL");
-            window.setTimeout(getData, 1000);
-        }
-    }
-}
 
 export function scaleFont(text: string, width:number, height:number) {  
     // Returns the largest possible font-size to fit within width, although the calculation is a little crude it works for most use cases
@@ -84,46 +25,7 @@ export function scaleFont(text: string, width:number, height:number) {
     }
     return fontSize;
 }
-export class localData {    
-    // Class to manage localStorage, it gives the ability to add a callback when the data is changed, effectively enabling data binding to front-end UI elements
-    #callbacks: Map<string, Array<CallableFunction>>;
-    constructor(){
-        this.#callbacks = new Map<string, Array<CallableFunction>>();
-    }
-    set(key: string, data: string, onChange: CallableFunction = ()=>{}) {
-        if (!this.#callbacks.has(key)) {
-            this.#callbacks.set(key, []);
-        }
-        let fncs = this.#callbacks.get(key)!;
-        fncs.push(onChange);
-        this.#callbacks.set(key, fncs);
-        localStorage.setItem(key, data);
-        onChange();
-    }
-    get(key: string): string | null {
-        return localStorage.getItem(key);
-    }
-    update(key: string, data: string) {
-        if (localStorage.getItem(key) != data) {  // Only change the data and execute callbacks if it's different to what is already stored.
-            localStorage.setItem(key, data);
-            if (this.#callbacks.has(key)) {  
-                let fncs = this.#callbacks.get(key);
-                fncs?.forEach((value)=>{
-                    value();
-                });
-            }
-        }        
-    }
-    remove(key: string) {
-        if (this.#callbacks.has(key)) {
-            this.#callbacks.delete(key);
-        }
-        localStorage.removeItem(key);
-    }
-    cancelCallbacks() {
-        this.#callbacks = new Map<string, Array<CallableFunction>>();
-    }
-}
+
 
 export class selfUpdatingWidget{
     // Used to store the coordinate and callback data for a 'widget'. It's deliberately vaguely defined for wide ranging application.
@@ -159,7 +61,7 @@ function largestFont(context: CanvasRenderingContext2D, text: string, width: num
 export class Textbox extends selfUpdatingWidget {
     context: CanvasRenderingContext2D;
     text: string; align: string; color: string; padding: number; font: string; fontSize: number; bgColor: string;
-    innerWidth: number; innerHeight: number; dataBindSrc: string;
+    innerWidth: number; innerHeight: number; dataBindSrc: string; txtWidth: number;
     constructor(options : {context: CanvasRenderingContext2D, 
                            text: string, x: number, y: number, w: number, h: number,
                            charWidth?: number, align?: string, color?: string, bgColor?: string,
@@ -188,6 +90,12 @@ export class Textbox extends selfUpdatingWidget {
         }
         this.innerWidth = this.w - 2 * this.padding;
         this.innerHeight = this.h - 2 * this.padding;
+        let fontSize = largestFont(this.context, this.text, this.innerWidth, this.innerHeight, this.font);
+        if ( this.fontSize > fontSize || !this.fontSize ) {     // Override nominated fontsize if it's too big
+            this.fontSize = fontSize;
+        } 
+        this.context.font = this.fontSize.toString() + "px " + this.font;
+        this.txtWidth = this.context.measureText(this.text).width;
     }
     draw() {
         if ( this.bgColor != "noney") {
@@ -204,18 +112,18 @@ export class Textbox extends selfUpdatingWidget {
             this.fontSize = fontSize;
         } 
         this.context.font = this.fontSize.toString() + "px " + this.font;
-        let txtWidth = this.context.measureText(this.text).width;
+        this.txtWidth = this.context.measureText(this.text).width;
         let yOffset = this.y+this.h - this.fontSize/2;          // Position at the bottom of the textbox
         yOffset -= (this.innerHeight - this.fontSize*1.45)/2;   // Vertical centre
         let xOffset =  this.x + this.padding;   // Left aligned
         if ( this.align == "center" ) {
-            xOffset += (this.innerWidth - txtWidth) / 2;       // Horizontal centre
+            xOffset += (this.innerWidth -this.txtWidth) / 2;       // Horizontal centre
         } else if ( this.align == "right" ) {
-            xOffset += this.innerWidth - txtWidth;             // Right
+            xOffset += this.innerWidth - this.txtWidth;             // Right
         }
         
         this.context.fillStyle = "blue";
-        this.context.fillRect(xOffset, this.y+this.padding,txtWidth, this.h-2*this.padding);
+        this.context.fillRect(xOffset, this.y+this.padding, this.txtWidth, this.h-2*this.padding);
 
         this.context.fillStyle = this.color;
         this.context.fillText(this.text, xOffset, yOffset);       
@@ -249,10 +157,10 @@ export function selfUpdatingText(context:CanvasRenderingContext2D, dataSrc:strin
     localStore.set(dataSrc,current,txt.updater);
 }
 
-function toF(cent: number): number {
+export function toF(cent: number): number {
     return Math.round(((cent * 9 / 5) + 32));
 }
-function toC(fah: number) : number {
+export function toC(fah: number) : number {
     return fah == 0 ? 0 : Math.round((fah-32) / 1.8);
 }
 
@@ -286,5 +194,5 @@ export function cancelTimeOuts() {  // Called when resizing the screen so to pre
 var centigrade: boolean = true;
 
 export var timeOutIds:number[] = [];    // Array of timeOutIds from window.setInterval so they can be cancelled at a later point.
-export var localStore = new localData();
+
   
