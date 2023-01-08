@@ -56,7 +56,9 @@ export class Textbox extends selfUpdatingWidget {
                 let data = localStore.get(this.dataBindSrc);
                 if ( data  != null ) {
                     this.text = data;
-                    this.context.clearRect(this.x, this.y,this.w, this.h);
+                    if ( this.bgColor == "none" )  {    // Only clear the canvas area if it's transparent to reduce artefacting.
+                        this.context.clearRect(this.x, this.y,this.w, this.h);
+                    }
                     this.draw();
                 }
             }
@@ -74,10 +76,7 @@ export class Textbox extends selfUpdatingWidget {
     draw() {
         if ( this.bgColor != "none") {
             this.context.fillStyle = this.bgColor;
-            
             this.context.fillRect(this.x, this.y,this.w, this.h);
-            
-            //this.context.fillRect(this.x+this.padding, this.y+this.padding,this.w-2*this.padding, this.h-2*this.padding);
         }
         this.context.fillStyle = this.color;
         this.context.textAlign = "left";
