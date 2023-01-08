@@ -13,7 +13,7 @@ export function isNight(): boolean {    // A very crude function, returns true b
 }
 export function getData() {             // Checks the timestamp stored in localStorage, if old it requests new data from the API and updates localStorage
     /*
-    If the response from the API is in error a timeout is set to call itself again 0.5 seconds later. It will store the temperature data in the unit
+    If the response from the API is in error a timeout is set to call itself again 1 second later. It will store the temperature data in the unit
     currently in view (F or C).
     */
     const API_URL: string = "https://goweather.herokuapp.com/weather/london";
@@ -63,23 +63,26 @@ export function getData() {             // Checks the timestamp stored in localS
                 },
                 function() {
                     console.log("Promise returned error, retrying...");
-                    window.setTimeout(getData, 500);
+                   // window.setTimeout(getData, 1000);
                 }
             );
         } catch {
             console.log("Error retrieving URL");
-            window.setTimeout(getData, 500);
+            window.setTimeout(getData, 1000);
         }
     }
 }
 
 export function scaleFont(text: string, width:number, height:number) {  
     // Returns the largest possible font-size to fit within width, although the calculation is a little crude it works for most use cases
-    let fontSize = Math.floor(height);
+    let fontSize = Math.floor(width / (text.length/2));
     while (fontSize * text.length/2 > width) {
         fontSize -= 1;
     }
-    return fontSize - 1;
+    while (fontSize > height) {
+        fontSize -= 1;
+    }
+    return fontSize;
 }
 export class localData {    
     // Class to manage localStorage, it gives the ability to add a callback when the data is changed, effectively enabling data binding to front-end UI elements
@@ -136,6 +139,88 @@ export class selfUpdatingWidget{
         this.w = w;
         this.h = h;
     }
+}
+
+function largestFont(context: CanvasRenderingContext2D, text: string, width: number, height: number, font: string) {
+    let fontSize = Math.floor(width / (text.length/2));
+    context.font = fontSize.toString() + "px " + font;
+    let txtWidth = context.measureText(text).width;
+    while (txtWidth > width) {
+        fontSize -= 1;
+        context.font = fontSize.toString() + "px " + font;
+        txtWidth = context.measureText(text).width;
+    }
+    while (fontSize > height) {
+        fontSize -= 1;
+    }
+    return fontSize;
+}
+
+export class Textbox extends selfUpdatingWidget {
+    context: CanvasRenderingContext2D;
+    text: string; align: string; color: string; padding: number; font: string; fontSize: number; bgColor: string;
+    innerWidth: number; innerHeight: number; dataBindSrc: string;
+    constructor(options : {context: CanvasRenderingContext2D, 
+                           text: string, x: number, y: number, w: number, h: number,
+                           charWidth?: number, align?: string, color?: string, bgColor?: string,
+                           padding?: number, font?: string, fontSize?: number, dataBindSrc?: string}) {
+        super(options.x,options.y,options.w,options.h);
+        this.text = options.text;
+        this.context = options.context;
+        typeof(options.align) == "undefined" ? this.align = "center" : this.align = options.align;
+        typeof(options.color) == "undefined" ? this.color = "white" : this.color = options.color;
+        typeof(options.bgColor) == "undefined" ? this.bgColor = "none" : this.bgColor = options.bgColor;
+        typeof(options.padding) == "undefined" ? this.padding = 10 : this.padding = options.padding;
+        typeof(options.font) == "undefined" ? this.font = "Arial" : this.font = options.font;
+        typeof(options.fontSize) == "undefined" ? this.fontSize = 0 : this.fontSize = options.fontSize;
+        typeof(options.dataBindSrc) == "undefined" ? this.dataBindSrc = "" : this.dataBindSrc = options.dataBindSrc;
+        
+        if ( this.dataBindSrc != "" ){
+            this.updater = ()=>{
+                let data = localStore.get(this.dataBindSrc);
+                if ( data  != null ) {
+                    this.text = data;
+                    this.context.clearRect(this.x, this.y,this.w, this.h);
+                    this.draw();
+                }
+            }
+            localStore.set(this.dataBindSrc,this.text,this.updater);
+        }
+        this.innerWidth = this.w - 2 * this.padding;
+        this.innerHeight = this.h - 2 * this.padding;
+    }
+    draw() {
+        if ( this.bgColor != "noney") {
+            //context.fillStyle = this.bgColor;
+            this.context.fillStyle = "red";
+            this.context.fillRect(this.x, this.y,this.w, this.h);
+            this.context.fillStyle = "green";
+            this.context.fillRect(this.x+this.padding, this.y+this.padding,this.w-2*this.padding, this.h-2*this.padding);
+        }
+        this.context.fillStyle = this.color;
+        this.context.textAlign = "left";
+        let fontSize = largestFont(this.context, this.text, this.innerWidth, this.innerHeight, this.font);
+        if ( this.fontSize > fontSize || !this.fontSize ) {     // Override nominated fontsize if it's too big
+            this.fontSize = fontSize;
+        } 
+        this.context.font = this.fontSize.toString() + "px " + this.font;
+        let txtWidth = this.context.measureText(this.text).width;
+        let yOffset = this.y+this.h - this.fontSize/2;          // Position at the bottom of the textbox
+        yOffset -= (this.innerHeight - this.fontSize*1.45)/2;   // Vertical centre
+        let xOffset =  this.x + this.padding;   // Left aligned
+        if ( this.align == "center" ) {
+            xOffset += (this.innerWidth - txtWidth) / 2;       // Horizontal centre
+        } else if ( this.align == "right" ) {
+            xOffset += this.innerWidth - txtWidth;             // Right
+        }
+        
+        this.context.fillStyle = "blue";
+        this.context.fillRect(xOffset, this.y+this.padding,txtWidth, this.h-2*this.padding);
+
+        this.context.fillStyle = this.color;
+        this.context.fillText(this.text, xOffset, yOffset);       
+    }
+    
 }
 
 export function selfUpdatingText(context:CanvasRenderingContext2D, dataSrc:string, x:number, y: number, w: number, h: number) {
