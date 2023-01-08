@@ -117,6 +117,8 @@ export function getData() {             // Checks the timestamp stored in localS
             },
             function() {
                 // Promise returned error, retrying...
+                let lastUpdateTime = "Error getting data, retrying...";
+                localStore.get("lastUpdateTime") == null ? localStore.set("lastUpdateTime", lastUpdateTime) : localStore.update("lastUpdateTime", lastUpdateTime);
                 window.setTimeout(getData, 1000);
             }
         );
