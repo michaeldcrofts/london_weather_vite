@@ -10,6 +10,10 @@ canvas { /* Mobile full screen */
   left: 5vw;
   position: absolute;
 }
+#ruler {
+  font-family: Arial;
+  font-size: 50px;
+}
 @media (min-width: 1024px) { /* Desktop/Tablet screen, centered*/
   canvas {
     width: 60vw;
