@@ -1,6 +1,6 @@
 import CanvasContainer from "./canvas";
 import { isNight, iconMap } from "./utils";
-import { selfUpdatingWidget, Textbox } from "./databound_widgets"
+import { SelfUpdatingWidget, Textbox } from "./databound_widgets"
 import { localStore } from "./data";
 /* A Map for the layout of portrait and landscape views to be read by the CanvasContainer. Each canvas element has a render.... function to draw itself
    which are then in turn called by the CanvasContainer. Each render...functions takes as arguments the x, y, width, and height measured in
@@ -191,14 +191,13 @@ export function renderDescriptionImg(options: {canvasContainer: CanvasContainer,
         let locationTxt = options.canvasContainer.objects.get("locationTxt");
         if ( locationTxt instanceof Textbox ) {
             let locationX = locationTxt.x + (locationTxt.w - locationTxt.txtWidth) / 2;
-            console.log(locationX, options.x * vw + options.w * vw );
             if ( options.x * vw + options.w * vw > locationX ) { // Ensure no overlap
                 options.w = locationX / vw - options.x;
             }
         }
     } 
     // Image icon, uses the selfUpdatingWidget class to manage updates. Binds to the 'description' data store
-    let imageIcon = new selfUpdatingWidget(options.x * vw,options.y * vh,options.w * vw,options.h * vh);
+    let imageIcon = new SelfUpdatingWidget(options.x * vw,options.y * vh,options.w * vw,options.h * vh);
     imageIcon.updater = ()=>{                
         let spriteX: number = 0;
         let spriteY: number = isNight() ? 290 : 0;
@@ -231,7 +230,12 @@ export function renderDescriptionImg(options: {canvasContainer: CanvasContainer,
         }
         img.src = "/icons.png";     
     };
-    localStore.set("description",todayDescription!,imageIcon.updater);
+    let cssClass = localStore.get("cssClass");
+    if ( cssClass == null ) {
+        cssClass = isNight() ? "night" : "day";
+    }
+    localStore.set("description",todayDescription!,imageIcon.updater);  // Bind to the description data source
+    localStore.set("cssClass",cssClass,imageIcon.updater);  // Bind to the cssClass for changing of image when daytime/nightime changes.
     
     options.canvasContainer.add("DescriptionImg", imageIcon);
 } 
