@@ -1,45 +1,56 @@
 import { cancelTimeOuts, isNight } from './utils';
-import { selfUpdatingWidget, Textbox } from "./databound_widgets"
+import { SelfUpdatingWidget, Textbox } from "./databound_widgets"
 import { localStore } from "./data";
 import { getData } from "./async_fetch";
 import { portrait, landscape } from "./display_layout";
+
+const MAX_WIDTH: number = 1024;
+const LARGE_SCREEN_SIZE: number = 0.6;  // 60vw/vh
+const SMALL_SCREEN_SIZE: number = 0.9;  // 90vw/vh
 
 export default class CanvasContainer {
     /* class CanvasContainer - contains and manages a canvas. It's responsible for managing the drawing and resizing 
        of the canvas on screen.
     */
-    canvas; context; cachedWidth; vw; vh; objects;
+    public canvas; public context; public cachedWidth; public vw; public vh; public objects;
     constructor(el: HTMLCanvasElement) {    
         // Sets the canvas up with some hard-coded percentages of the screen width and height.
         // Note: If these are changed here they must also be changed inside style.css to match!
         this.canvas = el;
-        let cssClass: string = isNight() ? "night" : "day";
-        localStore.set("cssClass", cssClass, ()=>{
-            this.canvas.classList.add(cssClass);    
-        });
-        this.canvas.classList.add(cssClass);
         this.context = this.canvas.getContext("2d")!;
-        if (document.documentElement.clientWidth >= 1024) {
-            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
-            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vh
+        if (document.documentElement.clientWidth >= MAX_WIDTH) {
+            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * LARGE_SCREEN_SIZE;  
+            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * LARGE_SCREEN_SIZE;
         } else {
-            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.9;   // 90vw
-            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.9; // 90vh
+            this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * SMALL_SCREEN_SIZE;
+            this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * SMALL_SCREEN_SIZE;
         }
         this.cachedWidth = document.documentElement.clientWidth;
         this.vw = this.canvas.width * 0.01;
         this.vh = this.canvas.height * 0.01;
-        this.objects = new Map<string, Textbox | selfUpdatingWidget>();
+        this.objects = new Map<string, Textbox | SelfUpdatingWidget>();
         this.draw();
         getData();
     }
-    get() {
+    public get() {
         return this.canvas;
     }
-    add(key: string, obj: Textbox | selfUpdatingWidget) {
+    public add(key: string, obj: Textbox | SelfUpdatingWidget) {
         this.objects.set(key, obj);
     }
-    draw() {
+    public draw() {
+        let currentClass = localStore.get("cssClass");
+        if ( currentClass != null ) {
+            this.canvas.classList.remove(currentClass);
+        }
+        let cssClass: string = isNight() ? "night" : "day";
+        localStore.set("cssClass", cssClass, ()=>{
+            let cssClass = localStore.get("cssClass")!;
+            this.canvas.classList.remove("night");
+            this.canvas.classList.remove("day");
+            this.canvas.classList.add(cssClass);    
+        });
+        this.canvas.classList.add(cssClass);
         if (this.canvas.width < this.canvas.height) {   // Portrait
             for ( let key of portrait.keys() ) {
                 let options = portrait.get(key);
@@ -57,9 +68,9 @@ export default class CanvasContainer {
             }
         }
     }
-    resize() {
+    public resize() {
         if (this.cachedWidth !== document.documentElement.clientWidth) {
-            if (document.documentElement.clientWidth >= 1024) {
+            if (document.documentElement.clientWidth >= MAX_WIDTH) {
                 this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw
                 this.canvas.height = document.documentElement.clientHeight * window.devicePixelRatio * 0.6; // 60vw
             } else {
@@ -71,7 +82,7 @@ export default class CanvasContainer {
             this.vh = this.canvas.height * 0.01;
             cancelTimeOuts();   // Remove any timer callbacks
             localStore.cancelCallbacks();      // Delete all the callbacks for the data bound objects
-            this.objects = new Map<string, Textbox | selfUpdatingWidget>();   // Delete canvas objects
+            this.objects = new Map<string, Textbox | SelfUpdatingWidget>();   // Delete canvas objects
             this.draw();
         }
     }

@@ -16,14 +16,14 @@ function largestFont(context: CanvasRenderingContext2D, text: string, width: num
     return fontSize;
 }
 
-export class selfUpdatingWidget{
+export class SelfUpdatingWidget{
     // Used to store the coordinate and callback data for a 'widget'. It's deliberately vaguely defined for wide ranging application.
     // To-do: Use as a parent class for subclasses with specific functionality, such as Textbox or Image.
-    x:number;
-    y:number;
-    w:number;
-    h:number;
-    updater: CallableFunction = ()=>{};
+    public x:number;
+    public y:number;
+    public w:number;
+    public h:number;
+    public updater: CallableFunction = ()=>{};
     constructor(x:number,y:number,w:number,h:number) {
         this.x = x;
         this.y = y;
@@ -32,10 +32,11 @@ export class selfUpdatingWidget{
     }
 }
 
-export class Textbox extends selfUpdatingWidget {
-    context: CanvasRenderingContext2D;
-    text: string; align: string; color: string; padding: number; font: string; fontSize: number; bgColor: string;
-    innerWidth: number; innerHeight: number; dataBindSrc: string; txtWidth: number;
+export class Textbox extends SelfUpdatingWidget {
+    public context: CanvasRenderingContext2D;
+    private text: string; private align: string; private color: string; private padding: number; private font: string; private fontSize: number; 
+    private bgColor: string; private innerWidth: number; private innerHeight: number; private dataBindSrc: string; 
+    public txtWidth: number;
     constructor(options : {context: CanvasRenderingContext2D, 
                            text: string, x: number, y: number, w: number, h: number,
                            charWidth?: number, align?: string, color?: string, bgColor?: string,
@@ -73,7 +74,7 @@ export class Textbox extends selfUpdatingWidget {
         this.context.font = this.fontSize.toString() + "px " + this.font;
         this.txtWidth = this.context.measureText(this.text).width;
     }
-    draw() {
+    public draw() {
         if ( this.bgColor != "none") {
             this.context.fillStyle = this.bgColor;
             this.context.fillRect(this.x, this.y,this.w, this.h);

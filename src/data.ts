@@ -5,44 +5,44 @@
           E.g. localStore.set(key: string, initial_data: string, callbackFunction: callableFunction)
 */
 
-class localData {    
-    #callbacks: Map<string, Array<CallableFunction>>;
+class LocalData {    
+    private callbacks: Map<string, Array<CallableFunction>>;
     constructor(){
-        this.#callbacks = new Map<string, Array<CallableFunction>>();
+        this.callbacks = new Map<string, Array<CallableFunction>>();
     }
-    set(key: string, data: string, onChange: CallableFunction = ()=>{}) {
-        if (!this.#callbacks.has(key)) {
-            this.#callbacks.set(key, []);
+    public set(key: string, data: string, onChange: CallableFunction = ()=>{}) {
+        if (!this.callbacks.has(key)) {
+            this.callbacks.set(key, []);
         }
-        let fncs = this.#callbacks.get(key)!;
+        let fncs = this.callbacks.get(key)!;
         fncs.push(onChange);
-        this.#callbacks.set(key, fncs);
+        this.callbacks.set(key, fncs);
         localStorage.setItem(key, data);
         onChange();
     }
-    get(key: string): string | null {
+    public get(key: string): string | null {
         return localStorage.getItem(key);
     }
-    update(key: string, data: string) {
+    public update(key: string, data: string) {
         if (localStorage.getItem(key) != data) {  // Only change the data and execute callbacks if it's different to what is already stored.
             localStorage.setItem(key, data);
-            if (this.#callbacks.has(key)) {  
-                let fncs = this.#callbacks.get(key);
+            if (this.callbacks.has(key)) {  
+                let fncs = this.callbacks.get(key);
                 fncs?.forEach((value)=>{
                     value();
                 });
             }
         }        
     }
-    remove(key: string) {
-        if (this.#callbacks.has(key)) {
-            this.#callbacks.delete(key);
+    public remove(key: string) {
+        if (this.callbacks.has(key)) {
+            this.callbacks.delete(key);
         }
         localStorage.removeItem(key);
     }
-    cancelCallbacks() {
-        this.#callbacks = new Map<string, Array<CallableFunction>>();
+    public cancelCallbacks() {
+        this.callbacks = new Map<string, Array<CallableFunction>>();
     }
 }
 
-export var localStore = new localData();
+export var localStore = new LocalData();

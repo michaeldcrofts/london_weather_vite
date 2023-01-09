@@ -9,9 +9,9 @@ export var iconMap = {          // x & y coordinates for a 'sprite-sheet' of ico
     storm: { x: 725, y: 0 },
 };
 
-export function isNight(): boolean {    // A very crude function, returns true between 6pm and midnight
+export function isNight(): boolean {    // A very crude function, returns true between 5pm and 7am
     let hour: number = new Date().getHours();
-    return hour >= 18 ? true : false;
+    return hour >= 17 || hour <= 6 ? true : false;
 }
 
 export function toF(cent: number): number {
