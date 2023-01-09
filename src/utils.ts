@@ -21,7 +21,7 @@ export function toC(fah: number) : number {
     return fah == 0 ? 0 : Math.round((fah-32) / 1.8);
 }
 
-export function toggleUnit() {
+export function toggleUnit(): void {
     // Enables the toggle between units. It stores the unit in localStorage to be retrieved by the temperature text widgets.
     // Because the data storage is bound to callbacks we only need to change the values stored.
     const regex = /[^\d\.\-]+/g;
@@ -103,7 +103,7 @@ export function toggleUnit() {
     }
 }
 
-export function cancelTimeOuts() {  // Called when resizing the screen so to prevent widgets from updating during resize
+export function cancelTimeOuts(): void {  // Called when resizing the screen so to prevent widgets from updating during resize
     timeOutIds.forEach(id => {
         window.clearInterval(id);
     });

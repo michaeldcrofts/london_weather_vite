@@ -1,7 +1,7 @@
 
 import { localStore } from "./data"
 
-function largestFont(context: CanvasRenderingContext2D, text: string, width: number, height: number, font: string) {
+function largestFont(context: CanvasRenderingContext2D, text: string, width: number, height: number, font: string): number {
     let fontSize = Math.floor(width / (text.length/2));
     context.font = fontSize.toString() + "px " + font;
     let txtWidth = context.measureText(text).width;
@@ -74,7 +74,7 @@ export class Textbox extends SelfUpdatingWidget {
         this.context.font = this.fontSize.toString() + "px " + this.font;
         this.txtWidth = this.context.measureText(this.text).width;
     }
-    public draw() {
+    public draw(): void {
         if ( this.bgColor != "none") {
             this.context.fillStyle = this.bgColor;
             this.context.fillRect(this.x, this.y,this.w, this.h);
@@ -95,7 +95,6 @@ export class Textbox extends SelfUpdatingWidget {
         } else if ( this.align == "right" ) {
             xOffset += this.innerWidth - this.txtWidth;             // Right
         }
-
         this.context.fillStyle = this.color;
         this.context.fillText(this.text, xOffset, yOffset);       
     }

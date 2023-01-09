@@ -10,7 +10,7 @@ class LocalData {
     constructor(){
         this.callbacks = new Map<string, Array<CallableFunction>>();
     }
-    public set(key: string, data: string, onChange: CallableFunction = ()=>{}) {
+    public set(key: string, data: string, onChange: CallableFunction = ()=>{}): void {
         if (!this.callbacks.has(key)) {
             this.callbacks.set(key, []);
         }
@@ -23,7 +23,7 @@ class LocalData {
     public get(key: string): string | null {
         return localStorage.getItem(key);
     }
-    public update(key: string, data: string) {
+    public update(key: string, data: string): void {
         if (localStorage.getItem(key) != data) {  // Only change the data and execute callbacks if it's different to what is already stored.
             localStorage.setItem(key, data);
             if (this.callbacks.has(key)) {  
@@ -34,13 +34,13 @@ class LocalData {
             }
         }        
     }
-    public remove(key: string) {
+    public remove(key: string): void {
         if (this.callbacks.has(key)) {
             this.callbacks.delete(key);
         }
         localStorage.removeItem(key);
     }
-    public cancelCallbacks() {
+    public cancelCallbacks(): void {
         this.callbacks = new Map<string, Array<CallableFunction>>();
     }
 }
