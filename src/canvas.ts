@@ -32,13 +32,13 @@ export default class CanvasContainer {
         this.draw();
         getData();
     }
-    public get() {
+    public get(): HTMLCanvasElement {
         return this.canvas;
     }
-    public add(key: string, obj: Textbox | SelfUpdatingWidget) {
+    public add(key: string, obj: Textbox | SelfUpdatingWidget): void {
         this.objects.set(key, obj);
     }
-    public draw() {
+    public draw(): void {
         let currentClass = localStore.get("cssClass");
         if ( currentClass != null ) {
             this.canvas.classList.remove(currentClass);
@@ -68,7 +68,7 @@ export default class CanvasContainer {
             }
         }
     }
-    public resize() {
+    public resize(): void {
         if (this.cachedWidth !== document.documentElement.clientWidth) {
             if (document.documentElement.clientWidth >= MAX_WIDTH) {
                 this.canvas.width = document.documentElement.clientWidth * window.devicePixelRatio * 0.6;  // 60vw

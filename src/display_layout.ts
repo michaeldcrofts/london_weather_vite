@@ -8,34 +8,34 @@ import { localStore } from "./data";
 */
 export var portrait = new Map([
     // Today
-    [renderDayDateTime,     {x: 0, y: 0,   w: 100, h: 5}],
-    [renderLocation,        {x: 0, y: 5.5, w: 100, h: 6}],
-    [renderDescriptionImg,  {x: 5, y: 6.5, w: 28,  h: 28}],
-    [renderTodayTemp,       {x: 34, y: 12,  w: 32, h: 8}],
-    [renderTodayDescription,{x: 0, y: 20.5,w: 100, h: 6}],
-    [renderTodayWindImg,    {x: 30, y: 27,  w: 15,  h: 4.5}],
-    [renderTodayWind,       {x: 47, y: 27,  w: 23, h: 5}],
-    [renderWhiteLine,       {x: 0, y: 33,  w: 100, h: 0.5}],
+    [renderDayDateTime,     {x: 0,  y: 0,    w: 100, h: 5}],
+    [renderLocation,        {x: 0,  y: 5.5,  w: 100, h: 6}],
+    [renderDescriptionImg,  {x: 5,  y: 6.5,  w: 28,  h: 28}],
+    [renderTodayTemp,       {x: 34, y: 12,   w: 32,  h: 8}],
+    [renderTodayDescription,{x: 0,  y: 20.5, w: 100, h: 6}],
+    [renderTodayWindImg,    {x: 30, y: 27,   w: 15,  h: 4.5}],
+    [renderTodayWind,       {x: 47, y: 27,   w: 23,  h: 5}],
+    [renderWhiteLine,       {x: 0,  y: 33,   w: 100, h: 0.5}],
     // Day 1
-    [renderDay1BgRect,      {x: 1, y: 34.5,w: 98,  h: 15.5}],
-    [renderDay1DayDate,     {x: 1, y: 35,  w: 98, h: 4.5}],
-    [renderDay1Temp,        {x: 1, y: 40,  w: 98, h: 4.5}],
-    [renderDay1WindImg,     {x: 1, y: 45,  w: 15,  h: 4.5}],
-    [renderDay1Wind,        {x: 18,y: 45,  w: 81,  h: 4.5}],
+    [renderDay1BgRect,      {x: 1,  y: 34.5, w: 98,  h: 15.5}],
+    [renderDay1DayDate,     {x: 1,  y: 35,   w: 98,  h: 4.5}],
+    [renderDay1Temp,        {x: 1,  y: 40,   w: 98,  h: 4.5}],
+    [renderDay1WindImg,     {x: 1,  y: 45,   w: 15,  h: 4.5}],
+    [renderDay1Wind,        {x: 18, y: 45,   w: 81,  h: 4.5}],
     // Day 2
-    [renderDay2BgRect,      {x: 1, y: 52.5,w: 98,  h: 15.5}],
-    [renderDay2DayDate,     {x: 1, y: 53,  w: 98, h: 4.5}],
-    [renderDay2Temp,        {x: 1, y: 58,  w: 98, h: 4.5}],
-    [renderDay2WindImg,     {x: 1, y: 63,  w: 15,  h: 4.5}],
-    [renderDay2Wind,        {x: 18,y: 63,  w: 81,  h: 4.5}],
+    [renderDay2BgRect,      {x: 1,  y: 52.5, w: 98,  h: 15.5}],
+    [renderDay2DayDate,     {x: 1,  y: 53,   w: 98,  h: 4.5}],
+    [renderDay2Temp,        {x: 1,  y: 58,   w: 98,  h: 4.5}],
+    [renderDay2WindImg,     {x: 1,  y: 63,   w: 15,  h: 4.5}],
+    [renderDay2Wind,        {x: 18, y: 63,   w: 81,  h: 4.5}],
     // Day 3
-    [renderDay3BgRect,      {x: 1, y: 70.5,w: 98,  h: 15.5}],
-    [renderDay3DayDate,     {x: 1, y: 71,  w: 98, h: 4.5}],
-    [renderDay3Temp,        {x: 1, y: 76,  w: 98, h: 4.5}],
-    [renderDay3WindImg,     {x: 1, y: 81,  w: 15,  h: 4.5}],
-    [renderDay3Wind,        {x: 18,y: 81,  w: 81,  h: 4.5}],
+    [renderDay3BgRect,      {x: 1,  y: 70.5, w: 98,  h: 15.5}],
+    [renderDay3DayDate,     {x: 1,  y: 71,   w: 98,  h: 4.5}],
+    [renderDay3Temp,        {x: 1,  y: 76,   w: 98,  h: 4.5}],
+    [renderDay3WindImg,     {x: 1,  y: 81,   w: 15,  h: 4.5}],
+    [renderDay3Wind,        {x: 18, y: 81,   w: 81,  h: 4.5}],
     
-    [renderUpdateTime,      {x: 0, y: 96,  w: 100,  h: 4}],
+    [renderUpdateTime,      {x: 0,  y: 96,   w: 100, h: 4}],
 ]);
 
 export var landscape = new Map([
@@ -74,7 +74,7 @@ export var landscape = new Map([
     [renderUpdateTime,      {x: 0, y: 94,   w: 34,  h: 6}],
 ]);
 
-export function renderDayDateTime(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDayDateTime(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -84,7 +84,7 @@ export function renderDayDateTime(options: {canvasContainer: CanvasContainer, x:
     timeTxt.draw();
 }
 
-export function renderDayTime(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDayTime(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -94,7 +94,7 @@ export function renderDayTime(options: {canvasContainer: CanvasContainer, x: num
     timeTxt.draw();
 }
 
-export function renderDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -104,7 +104,7 @@ export function renderDate(options: {canvasContainer: CanvasContainer, x: number
     dateTxt.draw();
 }
 
-export function renderUpdateTime(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderUpdateTime(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -114,7 +114,7 @@ export function renderUpdateTime(options: {canvasContainer: CanvasContainer, x: 
     lastUpdateTimeTxt.draw();
 }
 
-export function renderLocation(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderLocation(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -123,7 +123,7 @@ export function renderLocation(options: {canvasContainer: CanvasContainer, x: nu
     locationTxt.draw();
 }
 
-export function renderTodayTemp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderTodayTemp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -134,7 +134,7 @@ export function renderTodayTemp(options: {canvasContainer: CanvasContainer, x: n
 
 }
 
-export function renderTodayDescription(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderTodayDescription(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -144,7 +144,7 @@ export function renderTodayDescription(options: {canvasContainer: CanvasContaine
     todayDescriptionTxt.draw();
 }
 
-export function renderTodayWind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderTodayWind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -154,7 +154,7 @@ export function renderTodayWind(options: {canvasContainer: CanvasContainer, x: n
     todayWindTxt.draw();
 }
 
-export function renderWhiteLine(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderWhiteLine(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -165,7 +165,7 @@ export function renderWhiteLine(options: {canvasContainer: CanvasContainer, x: n
     context.stroke();
 }
 
-export function renderDescriptionImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDescriptionImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -240,7 +240,7 @@ export function renderDescriptionImg(options: {canvasContainer: CanvasContainer,
     options.canvasContainer.add("DescriptionImg", imageIcon);
 } 
 
-export function renderDay1BgRect(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1BgRect(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -248,7 +248,7 @@ export function renderDay1BgRect(options: {canvasContainer: CanvasContainer, x: 
     context.fillRect(options.x * vw, options.y * vh, options.w * vw, options.h * vh);
 }
 
-export function renderDay2BgRect(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2BgRect(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -256,7 +256,7 @@ export function renderDay2BgRect(options: {canvasContainer: CanvasContainer, x: 
     context.fillRect(options.x * vw, options.y * vh, options.w * vw, options.h * vh);
 }
 
-export function renderDay3BgRect(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3BgRect(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -264,7 +264,7 @@ export function renderDay3BgRect(options: {canvasContainer: CanvasContainer, x: 
     context.fillRect(options.x * vw, options.y * vh, options.w * vw, options.h * vh);
 }
 
-export function renderDay1DayDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1DayDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -275,7 +275,7 @@ export function renderDay1DayDate(options: {canvasContainer: CanvasContainer, x:
     day1DayDateTxt.draw();
 }
 
-export function renderDay2DayDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2DayDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -286,7 +286,7 @@ export function renderDay2DayDate(options: {canvasContainer: CanvasContainer, x:
     day2DayDateTxt.draw();
 }
 
-export function renderDay3DayDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3DayDate(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -297,7 +297,7 @@ export function renderDay3DayDate(options: {canvasContainer: CanvasContainer, x:
     day3DayDateTxt.draw();
 }
 
-export function renderDay1Temp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1Temp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -312,7 +312,7 @@ export function renderDay1Temp(options: {canvasContainer: CanvasContainer, x: nu
     day1TempTxt.draw();
 }
 
-export function renderDay2Temp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2Temp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -327,7 +327,7 @@ export function renderDay2Temp(options: {canvasContainer: CanvasContainer, x: nu
     day2TempTxt.draw();
 }
 
-export function renderDay3Temp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3Temp(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -342,7 +342,7 @@ export function renderDay3Temp(options: {canvasContainer: CanvasContainer, x: nu
     day3TempTxt.draw();
 }
 
-export function renderTodayWindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderTodayWindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -356,7 +356,7 @@ export function renderTodayWindImg(options: {canvasContainer: CanvasContainer, x
     img.src = "/wind.png";
 }
 
-export function renderDay1WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -370,7 +370,7 @@ export function renderDay1WindImg(options: {canvasContainer: CanvasContainer, x:
     img.src = "/wind.png";
 }
 
-export function renderDay2WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -384,7 +384,7 @@ export function renderDay2WindImg(options: {canvasContainer: CanvasContainer, x:
     img.src = "/wind.png";
 }
 
-export function renderDay3WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3WindImg(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -398,7 +398,7 @@ export function renderDay3WindImg(options: {canvasContainer: CanvasContainer, x:
     img.src = "/wind.png";
 }
 
-export function renderDay1Wind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1Wind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -409,7 +409,7 @@ export function renderDay1Wind(options: {canvasContainer: CanvasContainer, x: nu
     day1WindTxt.draw();
 }
 
-export function renderDay2Wind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2Wind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -420,7 +420,7 @@ export function renderDay2Wind(options: {canvasContainer: CanvasContainer, x: nu
     day2WindTxt.draw();
 }
 
-export function renderDay3Wind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3Wind(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -431,7 +431,7 @@ export function renderDay3Wind(options: {canvasContainer: CanvasContainer, x: nu
     day3WindTxt.draw();
 }
 
-export function renderDay1Day(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1Day(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -442,7 +442,7 @@ export function renderDay1Day(options: {canvasContainer: CanvasContainer, x: num
     day1DayTxt.draw();
 }
 
-export function renderDay2Day(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2Day(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -453,7 +453,7 @@ export function renderDay2Day(options: {canvasContainer: CanvasContainer, x: num
     day2DayTxt.draw();
 }
 
-export function renderDay3Day(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3Day(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -464,7 +464,7 @@ export function renderDay3Day(options: {canvasContainer: CanvasContainer, x: num
     day3DayTxt.draw();
 }
 
-export function renderDay1Date(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay1Date(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -475,7 +475,7 @@ export function renderDay1Date(options: {canvasContainer: CanvasContainer, x: nu
     day1DateTxt.draw();
 }
 
-export function renderDay2Date(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay2Date(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;
@@ -486,7 +486,7 @@ export function renderDay2Date(options: {canvasContainer: CanvasContainer, x: nu
     day2DateTxt.draw();
 }
 
-export function renderDay3Date(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}) {
+export function renderDay3Date(options: {canvasContainer: CanvasContainer, x: number, y: number, w: number, h: number}): void {
     let context = options.canvasContainer.context;
     let vw = options.canvasContainer.vw;
     let vh = options.canvasContainer.vh;

@@ -9,7 +9,7 @@ import { localStore } from "./data";
 import { toF, isNight } from "./utils";
 
 /* Manages the update to localStorage for the time strings used by the app*/
-export function updateTimeStrings() {
+export function updateTimeStrings(): void {
     // Get and format desired day/date/time strings
     let day_time = new Date().toLocaleString('en-gb', { weekday: 'long', hour: '2-digit', minute: '2-digit'}).replaceAll(",","");
     let day_date_time = new Date().toLocaleString('en-gb', { weekday: 'long', day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'}).replaceAll(",","");
@@ -55,7 +55,7 @@ export function updateTimeStrings() {
     If the response from the API is in error a timeout is set to call itself again 1 second later. It will store the temperature data in the unit
     currently in view (F or C).
     */
-export function getData() {             // Checks the timestamp stored in localStorage, if old it requests new data from the API and updates localStorage
+export function getData(): void {             // Checks the timestamp stored in localStorage, if old it requests new data from the API and updates localStorage
     const API_URL: string = "https://goweather.herokuapp.com/weather/london";
     let timestamp: number = Number(localStore.get("timestamp"));
     //localStorage.removeItem("timestamp");
