@@ -6,7 +6,7 @@ import { localStore } from "./data";
 var portraitView: Canvas;
 var landscapeView: Canvas;
 var currentView: Canvas;
-var cachedWidth: number;
+var cachedOrientation: string;
 
 function addEventListenerToCanvas(): void {
   const canvasElements = document.querySelectorAll("canvas") as NodeListOf<HTMLCanvasElement>;
@@ -125,12 +125,13 @@ function loadView(orientation: "portrait" | "landscape", width: number, height: 
 
 async function refreshView(): Promise<void> {
   let newView: Canvas;
-  cachedWidth = document.documentElement.clientWidth;
   if (document.documentElement.clientWidth > document.documentElement.clientHeight) { // Landscape view
+    cachedOrientation = "landscape";
     landscapeView = loadView("landscape", document.documentElement.clientWidth, document.documentElement.clientHeight);
     portraitView = loadView("portrait", document.documentElement.clientHeight, document.documentElement.clientWidth);
     newView = landscapeView;
   } else {  // Portrait view
+    cachedOrientation = "portrait";
     landscapeView = loadView("landscape", document.documentElement.clientHeight, document.documentElement.clientWidth);
     portraitView = loadView("portrait", document.documentElement.clientWidth, document.documentElement.clientHeight);
     newView = portraitView;
@@ -251,8 +252,9 @@ window.onload = async () => {
 
   
   window.addEventListener('resize', async ()=>{
-    if (document.documentElement.clientHeight == cachedWidth) {  // Change of orientation
-      cachedWidth = document.documentElement.clientWidth;
+    let currentOrientation = document.documentElement.clientWidth > document.documentElement.clientHeight ? "landscape" : "portrait";
+    if (currentOrientation != cachedOrientation) {  // Change of orientation
+      cachedOrientation = currentOrientation;
       document.getElementById("app")?.removeChild(await currentView.get());
       if (currentView == portraitView) {
         currentView = landscapeView;
