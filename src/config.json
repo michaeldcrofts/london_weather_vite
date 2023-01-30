@@ -1,6 +1,7 @@
 {
     "bgColor" : "rgba(68,114,196, 1)",
     "API_URL" : "https://goweather.herokuapp.com/weather/london",
+    "location": "London",
     "updateInterval": 900,
     "iconMap" : {
         "default":      { "x": 0,   "y": 0 },

@@ -237,6 +237,8 @@ function updateTimeStrings() {
 
 window.onload = async () => {
   fetchData(config.API_URL);  // Query for data
+  updateTimeStrings();
+  localStore.setItem("location", config.location);
   refreshView();
 
   // Trigger a full refresh to the view if the description changes
