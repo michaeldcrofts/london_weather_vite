@@ -3,7 +3,6 @@ import * as config from "./config.json";
 import { Canvas, Label, Picture, Rectangle } from "./canvas";
 import { localStore } from "./data";
 
-
 var portraitView: Canvas;
 var landscapeView: Canvas;
 var currentView: Canvas;
@@ -124,6 +123,26 @@ function loadView(orientation: "portrait" | "landscape", width: number, height: 
   return cnv;
 }
 
+async function refreshView(): Promise<void> {
+  let newView: Canvas;
+  cachedWidth = document.documentElement.clientWidth;
+  if (document.documentElement.clientWidth > document.documentElement.clientHeight) { // Landscape view
+    landscapeView = loadView("landscape", document.documentElement.clientWidth, document.documentElement.clientHeight);
+    portraitView = loadView("portrait", document.documentElement.clientHeight, document.documentElement.clientWidth);
+    newView = landscapeView;
+  } else {  // Portrait view
+    landscapeView = loadView("landscape", document.documentElement.clientHeight, document.documentElement.clientWidth);
+    portraitView = loadView("portrait", document.documentElement.clientWidth, document.documentElement.clientHeight);
+    newView = portraitView;
+  }
+  if (currentView != undefined) {
+    document.getElementById("app")?.removeChild(await currentView.get());
+  }
+  currentView = newView;
+  document.getElementById("app")?.appendChild(await currentView.get());
+  addEventListenerToCanvas();
+}
+
 function storeData(data:any): void {
   let unit = localStore.getItem("unit");
   if ( unit == null ) {
@@ -158,27 +177,6 @@ function storeData(data:any): void {
   localStore.setItem("timestamp", Date.now().toString());
   let lastUpdateTime = "Updated " + new Date().toLocaleString('en-gb', { weekday: 'long', day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'}).replaceAll(",","");
   localStore.setItem("lastUpdateTime", lastUpdateTime);
-}
-
-async function refreshView(): Promise<void> {
-  let newView: Canvas;
-  cachedWidth = document.documentElement.clientWidth;
-  if (document.documentElement.clientWidth > document.documentElement.clientHeight) { // Landscape view
-    landscapeView = loadView("landscape", document.documentElement.clientWidth, document.documentElement.clientHeight);
-    portraitView = loadView("portrait", document.documentElement.clientHeight, document.documentElement.clientWidth);
-    newView = landscapeView;
-  } else {  // Portrait view
-    landscapeView = loadView("landscape", document.documentElement.clientHeight, document.documentElement.clientWidth);
-    portraitView = loadView("portrait", document.documentElement.clientWidth, document.documentElement.clientHeight);
-    newView = portraitView;
-  }
-  if (currentView != undefined) {
-    document.getElementById("app")?.removeChild(await currentView.get());
-  }
-  currentView = newView;
-  document.getElementById("app")?.appendChild(await currentView.get());
-  //document.querySelector("canvas")?.classList.add("night");
-  addEventListenerToCanvas();
 }
 
 function toF(cent: number): number {
@@ -251,6 +249,7 @@ window.onload = async () => {
     updateTimeStrings();    
   },10000);
 
+  
   window.addEventListener('resize', async ()=>{
     if (document.documentElement.clientHeight == cachedWidth) {  // Change of orientation
       cachedWidth = document.documentElement.clientWidth;
@@ -263,7 +262,7 @@ window.onload = async () => {
       document.getElementById("app")?.appendChild(await currentView.get());
       addEventListenerToCanvas();   
     } else {    // Resize or change of resolution
-      refreshView();
+      window.setTimeout(refreshView, 250);  // Debounce phone scroll
     }
   }, true);
 }
