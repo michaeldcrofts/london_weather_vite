@@ -1,0 +1,122 @@
+{
+    "bgColor" : "rgba(68,114,196, 1)",
+    "API_URL" : "https://goweather.herokuapp.com/weather/london",
+    "location": "London",
+    "updateInterval": 900,
+    "iconMap" : {
+        "default":      { "x": 0,   "y": 0 },
+        "clear":        { "x": 0,   "y": 0 },
+        "partlyCloudy": { "x": 145, "y": 0 },
+        "lightRain":    { "x": 290, "y": 0 },
+        "rain":         { "x": 435, "y": 0 },
+        "heavyRain":    { "x": 580, "y": 0 },
+        "storm":        { "x": 725, "y": 0 },
+        "nightOffset": 290,
+        "width": 120,
+        "height": 120,
+        "src": "/icons.png"
+    },
+    "portrait" : {
+       "today" : { 
+            "dayDateTime":      { "x":    0, "y":    0, "w": 100, "h":  5,  "type": "text",  "dataSrc": "day_date_time", "args": {}},
+            "location":         { "x":    0, "y":  5.5, "w": 100, "h":  6,  "type": "text",  "dataSrc": "location", "args": {}},
+            "descriptionImg":   { "x":    5, "y":  6.5, "w":  28, "h":  28, "type": "image", "dataSrc": "iconMap", "args": {}},
+            "temperature":      { "x":   34, "y":   12, "w":  32, "h":  8,  "type": "text",  "dataSrc": "day0_temperature", "args": {}},
+            "description":      { "x":    0, "y": 20.5, "w": 100, "h":  6,  "type": "text",  "dataSrc": "day0_description", "args": {}},
+            "windImg":          { "x":   30, "y":   27, "w":  15, "h": 4.5, "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "wind":             { "x":   47, "y":   27, "w":  23, "h":  5,  "type": "text",  "dataSrc": "day0_wind", "args": {}},
+            "whiteLine":        { "x":    0, "y":   33, "w": 100, "h": 0.5, "type": "line",  "dataSrc": "", "args": {}}
+        },
+       "day1"  : { 
+            "day1Rect":         { "x":    1, "y": 34.5, "w": 98, "h": 15.5, "type": "rect",  "dataSrc": "",
+                                  "args": { "bgColor": "rgba(68,114,196, 1)"} },
+            "day1Date":         { "x":    1, "y":   35, "w": 98, "h": 4.5,  "type": "text",  "dataSrc": "day1_day_date",
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} },
+            "day1Temperature":  { "x":    1, "y":   40, "w": 98, "h": 4.5,  "type": "text",  "dataSrc": "day1_temperature",
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} },
+            "day1WindImg":      { "x":    1, "y":   45, "w": 12, "h": 4.5,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "day1Wind":         { "x":   15, "y":   45, "w": 80, "h": 4.5,  "type": "text",  "dataSrc": "day1_wind" ,
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} }
+        },
+        "day2"  : { 
+            "day2Rect":         { "x":    1, "y": 52.5, "w": 98, "h": 15.5, "type": "rect",  "dataSrc": "",
+                                  "args": { "bgColor": "rgba(68,114,196, 1)"} },
+            "day2Date":         { "x":    1, "y":   53, "w": 98, "h": 4.5,  "type": "text",  "dataSrc": "day2_day_date" ,
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} },
+            "day2Temperature":  { "x":    1, "y":   58, "w": 98, "h": 4.5,  "type": "text",  "dataSrc": "day2_temperature",
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} },
+            "day2WindImg":      { "x":    1, "y":   63, "w": 12, "h": 4.5,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "day2Wind":         { "x":   15, "y":   63, "w": 80, "h": 4.5,  "type": "text",  "dataSrc": "day2_wind" ,
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} }
+        },
+        "day3"  : { 
+            "day3Rect":         { "x":    1, "y": 70.5, "w": 98, "h": 15.5, "type": "rect",  "dataSrc": "" ,
+                                  "args": { "bgColor": "rgba(68,114,196, 1)"} },
+            "day3Date":         { "x":    1, "y":   71, "w": 98, "h": 4.5,  "type": "text",  "dataSrc": "day3_day_date" ,
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} },
+            "day3Temperature":  { "x":    1, "y":   76, "w": 98, "h": 4.5,  "type": "text",  "dataSrc": "day3_temperature",
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} },
+            "day3WindImg":      { "x":    1, "y":   81, "w": 12, "h": 4.5,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "day3Wind":         { "x":   15, "y":   81, "w": 80, "h": 4.5,  "type": "text",  "dataSrc": "day3_wind" ,
+                                  "args": { "align": "left", "bgColor": "rgba(68,114,196, 1)"} }
+        },
+        "UpdateInfo": {
+            "updateTime":       { "x":    0, "y":  96, "w": 100, "h":  4,  "type": "text",  "dataSrc": "lastUpdateTime", "args": {}}
+        }
+    },
+    "landscape" : {    
+        "today" : { 
+            "dayTime":          { "x":    0, "y":    0, "w":  35, "h":  10,  "type": "text",  "dataSrc": "day_time" , "args": {}},
+            "date":             { "x":    0, "y": 10.5, "w":  35, "h":   8,  "type": "text",  "dataSrc": "date", "args": {}},
+            "location":         { "x":    0, "y":   19, "w":  35, "h":  10,  "type": "text",  "dataSrc": "location", "args": {}},
+            "descriptionImg":   { "x":   10, "y":   64, "w":  14, "h":  14,  "type": "image", "dataSrc": "iconMap", "args": {}},
+            "temperature":      { "x":    0, "y": 29.5, "w":  35, "h":  12,  "type": "text",  "dataSrc": "day0_temperature", "args": {}},
+            "description":      { "x":    0, "y":   42, "w":  35, "h":  10,  "type": "text",  "dataSrc": "day0_description", "args": {}},
+            "windImg":          { "x":    9, "y": 52.5, "w":  6,  "h":   8,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "wind":             { "x":   15, "y": 52.5, "w":  12, "h":   8,  "type": "text",  "dataSrc": "day0_wind",
+                                  "args": { "align": "center"} }
+        },
+       "day1"  : { 
+            "day1Rect":         { "x":   37, "y":   0,  "w": 19, "h": 100, "type": "rect",  "dataSrc": "",
+                                  "args": { "bgColor": "rgba(68,114,196, 1)"} },
+            "day1Day":          { "x":   37, "y":   0,  "w": 19, "h":  10,  "type": "text",  "dataSrc": "day1_short_day", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day1Date":         { "x":   37, "y": 10.5, "w": 19, "h":   8,  "type": "text",  "dataSrc": "day1_date", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day1Temperature":  { "x":   37, "y":   19, "w": 19, "h":  10,  "type": "text",  "dataSrc": "day1_temperature", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day1WindImg":      { "x":   37, "y":   31, "w":  6, "h":   8,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "day1Wind":         { "x":   44, "y": 29.5, "w": 12, "h":   9,  "type": "text",  "dataSrc": "day1_wind", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}}
+        },
+        "day2"  : { 
+            "day2Rect":         { "x":   58, "y":   0,  "w": 19, "h": 100, "type": "rect",  "dataSrc": "",
+                                  "args": { "bgColor": "rgba(68,114,196, 1)"} },
+            "day2Day":          { "x":   58, "y":   0,  "w": 19, "h":  10,  "type": "text",  "dataSrc": "day2_short_day", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day2Date":         { "x":   58, "y": 10.5, "w": 19, "h":   8,  "type": "text",  "dataSrc": "day2_date", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day2Temperature":  { "x":   58, "y":   19, "w": 19, "h":  10,  "type": "text",  "dataSrc": "day2_temperature", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day2WindImg":      { "x":   58, "y":   31, "w":  6, "h":   8,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "day2Wind":         { "x":   65, "y": 29.5, "w": 12, "h":   9,  "type": "text",  "dataSrc": "day2_wind", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}}
+        },
+        "day3"  : { 
+            "day3Rect":         { "x":   79, "y":   0,  "w": 19, "h": 100, "type": "rect",  "dataSrc": "",
+                                  "args": { "bgColor": "rgba(68,114,196, 1)"} },
+            "day3Day":          { "x":   79, "y":   0,  "w": 19, "h":  10,  "type": "text",  "dataSrc": "day3_short_day", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day3Date":         { "x":   79, "y": 10.5, "w": 19, "h":   8,  "type": "text",  "dataSrc": "day3_date", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day3Temperature":  { "x":   79, "y":   19, "w": 19, "h":  10,  "type": "text",  "dataSrc": "day3_temperature", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}},
+            "day3WindImg":      { "x":   79, "y":   31, "w":  6, "h":   8,  "type": "image", "dataSrc": "/wind.png", "args": {}},
+            "day3Wind":         { "x":   86, "y": 29.5, "w": 12, "h":   9,  "type": "text",  "dataSrc": "day3_wind", 
+                                  "args": {"bgColor": "rgba(68,114,196, 1)"}}
+        },
+        "UpdateInfo": {
+            "updateTime":       { "x":    0, "y":   94, "w": 34, "h":   6,  "type": "text",  "dataSrc": "lastUpdateTime", "args": {}}
+        }
+    }
+}
