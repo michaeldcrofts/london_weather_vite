@@ -262,7 +262,7 @@ window.onload = async () => {
       document.getElementById("app")?.appendChild(await currentView.get());
       addEventListenerToCanvas();   
     } else {    // Resize or change of resolution
-      window.setTimeout(refreshView, 250);  // Debounce phone scroll
+      refreshView();
     }
   }, true);
 }
