@@ -4,15 +4,11 @@ body {
   background-color: rgba(68,114,196, 0.85);
 }
 canvas { /* Mobile full screen */
-  width: 90vw;
-  height: 90vh;
-  top: 5vh;
-  left: 5vw;
+  width: 95vw;
+  height: 95vh;
+  top: 2.5vh;
+  left: 2.5vw;
   position: absolute;
-}
-#ruler {
-  font-family: Arial;
-  font-size: 50px;
 }
 @media (min-width: 1024px) { /* Desktop/Tablet screen, centered*/
   canvas {

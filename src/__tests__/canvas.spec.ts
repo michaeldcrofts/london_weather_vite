@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import CanvasContainer from "../canvas";
+import * as canvas from "../canvas";
 
-describe("CanvasContainer", () => {
+describe("Canvas Class", () => {
   it("should be defined", () => {
-    expect(CanvasContainer).toBeDefined();
+    expect(canvas.Canvas).toBeDefined();
   });
 });
